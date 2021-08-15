@@ -3,9 +3,10 @@ import random
 nums = list(range(1, 11))
 day_format = lambda num: f"day{num}"
 day_ids = ['day1', 'day2', 'day3', 'day4', 'day5', 'day6', 'day7', 'day8', 'day9', 'day10']
-expected = day_ids.copy()
 
 # map
+
+expected = day_ids.copy()
 
 actual = []
 for num in nums:
@@ -44,6 +45,8 @@ assert data_before_shuffling != actual
 
 # sort
 
+expected = day_ids.copy()
+
 random_day_ids = random.sample(day_ids, len(day_ids))
 assert expected != random_day_ids
 
@@ -57,4 +60,14 @@ def extract_day_number(day_id):
 
 
 actual = sorted(random_day_ids, key=lambda day_id: extract_day_number(day_id))
+assert expected == actual
+
+# filter
+
+expected = ['day8', 'day9', 'day10']
+
+actual = [day_id for day_id in day_ids if extract_day_number(day_id) > 7]
+assert expected == actual
+
+actual = list(filter(lambda day_id: extract_day_number(day_id) > 7, day_ids))
 assert expected == actual
