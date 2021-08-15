@@ -2,7 +2,8 @@ import random
 
 nums = list(range(1, 11))
 day_format = lambda num: f"day{num}"
-expected = ['day1', 'day2', 'day3', 'day4', 'day5', 'day6', 'day7', 'day8', 'day9', 'day10']
+day_ids = ['day1', 'day2', 'day3', 'day4', 'day5', 'day6', 'day7', 'day8', 'day9', 'day10']
+expected = day_ids.copy()
 
 # map
 
@@ -30,12 +31,12 @@ assert expected == actual
 
 # shuffle
 
-data_to_shuffle = expected.copy()
+data_to_shuffle = day_ids.copy()
 data_before_shuffling = data_to_shuffle.copy()
 random.shuffle(data_to_shuffle) # mutable operation
 assert data_before_shuffling != data_to_shuffle
 
-data_to_shuffle = expected.copy()
+data_to_shuffle = day_ids.copy()
 data_before_shuffling = data_to_shuffle.copy()
 actual = random.sample(data_to_shuffle, len(data_to_shuffle)) # immutable operation
 assert data_before_shuffling == data_to_shuffle
@@ -43,12 +44,17 @@ assert data_before_shuffling != actual
 
 # sort
 
-random_days = random.sample(expected, len(expected))
-assert expected != random_days
+random_day_ids = random.sample(day_ids, len(day_ids))
+assert expected != random_day_ids
 
-actual = sorted(random_days)
+actual = sorted(random_day_ids)
 expected_as_string = ['day1', 'day10', 'day2', 'day3', 'day4', 'day5', 'day6', 'day7', 'day8', 'day9']
 assert expected_as_string == actual
 
-actual = sorted(random_days, key=lambda d: int(d.split('day')[1]))
+
+def extract_day_number(day_id):
+    return int(day_id.split('day')[1])
+
+
+actual = sorted(random_day_ids, key=lambda day_id: extract_day_number(day_id))
 assert expected == actual
