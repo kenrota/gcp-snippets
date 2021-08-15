@@ -28,6 +28,19 @@ assert expected == actual
 actual = [add_prefix(num) for num in nums]
 assert expected == actual
 
+# shuffle
+
+original_data = expected.copy()
+temporary_data = original_data.copy()
+random.shuffle(temporary_data) # mutable operation
+assert original_data != temporary_data
+
+original_data = expected.copy()
+temporary_data = original_data.copy()
+actual = random.sample(temporary_data, len(temporary_data)) # immutable operation
+assert original_data == temporary_data
+assert original_data != actual
+
 # sort
 
 random_days = random.sample(expected, len(expected))
