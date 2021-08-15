@@ -30,16 +30,16 @@ assert expected == actual
 
 # shuffle
 
-original_data = expected.copy()
-temporary_data = original_data.copy()
-random.shuffle(temporary_data) # mutable operation
-assert original_data != temporary_data
+data_to_shuffle = expected.copy()
+data_before_shuffling = data_to_shuffle.copy()
+random.shuffle(data_to_shuffle) # mutable operation
+assert data_before_shuffling != data_to_shuffle
 
-original_data = expected.copy()
-temporary_data = original_data.copy()
-actual = random.sample(temporary_data, len(temporary_data)) # immutable operation
-assert original_data == temporary_data
-assert original_data != actual
+data_to_shuffle = expected.copy()
+data_before_shuffling = data_to_shuffle.copy()
+actual = random.sample(data_to_shuffle, len(data_to_shuffle)) # immutable operation
+assert data_before_shuffling == data_to_shuffle
+assert data_before_shuffling != actual
 
 # sort
 
