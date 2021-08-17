@@ -6,6 +6,7 @@ temperatures_1 = pd.DataFrame(
         'temperature': [10, 20, 30],
     }
 )
+assert [0, 1, 2] == temperatures_1.index.to_list()
 
 temperatures_2 = pd.DataFrame(
     {
@@ -13,6 +14,7 @@ temperatures_2 = pd.DataFrame(
         'temperature': [40, 50, 60],
     }
 )
+assert [0, 1, 2] == temperatures_1.index.to_list()
 
 # keep original indices
 temperatures = pd.concat([temperatures_1, temperatures_2])
