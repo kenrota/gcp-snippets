@@ -26,3 +26,19 @@ end
 five_divisibles = filter(x -> isdivisible(x, by=5), data)
 actual = map(x -> addprefix(string(x)), five_divisibles)
 @assert ["example_5", "example_10"] == actual
+
+# Shuffle and sort data
+
+using Random
+Random.seed!(0)
+expected_shuffle_data = [8, 2, 5, 4, 7, 9, 10, 6, 3, 1]
+
+original_data = copy(data)
+shuffled_data = shuffle(data)
+@assert original_data == data # immutable
+@assert expected_shuffle_data == shuffled_data
+
+original_data = copy(shuffled_data)
+sorted_data = sort(shuffled_data)
+@assert original_data == shuffled_data # immutable
+@assert data == sorted_data
