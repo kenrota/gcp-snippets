@@ -16,3 +16,13 @@ end
 
 actual = filter(x -> isdivisible(x, by=3), data)
 @assert [3, 6, 9] == actual
+
+# Map with user define function
+
+function addprefix(name::String)::String
+    "example_$name"
+end
+
+five_divisibles = filter(x -> isdivisible(x, by=5), data)
+actual = map(x -> addprefix(string(x)), five_divisibles)
+@assert ["example_5", "example_10"] == actual
