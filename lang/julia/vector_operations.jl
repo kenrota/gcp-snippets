@@ -14,5 +14,5 @@ end
 @assert !isdivisible(1, by=3)
 @assert isdivisible(3, by=3)
 
-actual = filter(x -> isdivisible(x, by=2), data)
-@assert [2, 4, 6, 8, 10] == actual
+actual = filter(x -> isdivisible(x, by=3), data)
+@assert [3, 6, 9] == actual
