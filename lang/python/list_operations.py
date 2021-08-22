@@ -62,6 +62,24 @@ def extract_day_number(day_id):
 actual = sorted(random_day_ids, key=lambda day_id: extract_day_number(day_id))
 assert expected == actual
 
+# sort and extract index
+
+data = [100, 200, 10, 300]
+expected = [2, 0, 1, 3]
+
+value_index_tuples = [(v, i) for i, v in enumerate(data)]
+assert [(100, 0), (200, 1), (10, 2), (300, 3)] == value_index_tuples
+actual = list(
+    map(
+        lambda t: t[1], # extract indexes
+        sorted(
+            value_index_tuples,
+            key=lambda t: t[0] # sort by value
+        )
+    )
+)
+assert expected == actual
+
 # filter
 
 expected = ['day8', 'day9', 'day10']
