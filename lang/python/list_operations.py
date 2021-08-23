@@ -1,4 +1,6 @@
 import random
+import numpy as np
+import warnings
 
 nums = list(range(1, 11))
 day_format = lambda num: f"day{num}"
@@ -89,3 +91,35 @@ assert expected == actual
 
 actual = list(filter(lambda day_id: extract_day_number(day_id) > 7, day_ids))
 assert expected == actual
+
+# shallow flatten
+
+expected = [1, 2, 3, 4, 5, 6]
+actual = sum(
+    [[1, 2], [3, 4, 5, 6]],
+    [] # initial empty list
+)
+assert expected == actual
+
+actual = sum(
+    [[1, 2], [3, 4, [5, 6]]],
+    []
+)
+assert expected != actual
+
+# shallow flatten by numpy
+
+expected = [1, 2, 3, 4]
+
+data = [[1, 2], [3, 4]]
+actual = list(np.array(data).flatten())
+assert expected == actual
+
+warnings.simplefilter('ignore')
+
+data = [[1, 2], [3, 4, 5]] # must be same length lists
+actual = list(np.array(data).flatten())
+assert expected != actual
+assert data == actual
+
+warnings.resetwarnings()
