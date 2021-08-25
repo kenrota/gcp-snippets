@@ -26,3 +26,8 @@ assert 2 == data.get('c', 3) # not return given value if given key exists
 copy = data.copy()
 assert 0 == copy.pop('a')
 assert { 'b': 1, 'c': 2 } == copy
+
+result = []
+for key, value in data.items():
+    result.append([key, value])
+assert [['a', 0], ['b', 1], ['c', 2]] == result
