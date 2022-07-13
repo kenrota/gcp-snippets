@@ -27,5 +27,10 @@ class DataframeTests(unittest.TestCase):
         data = pd.concat([self.DATA_1, self.DATA_2], ignore_index=True)
         self.assertEqual(data.index.to_list(), [0, 1, 2, 3, 4, 5])
 
+    def test_replace_with_dict(self):
+        replaced = self.DATA_1.replace({"temperature": {10: 11, 30: 33}})
+        self.assertEqual(list(self.DATA_1["temperature"]), [10, 20, 30])
+        self.assertEqual(list(replaced["temperature"]), [11, 20, 33])
+
 if __name__ == "__main__":
     unittest.main()
