@@ -37,6 +37,9 @@ locals {
   function_name = "${var.prefix}-cloud-event"
 }
 
+# アーカイブのハッシュ値の使い方は以下のIssueを参考にした。
+# https://github.com/hashicorp/terraform-provider-google/issues/1938
+
 data "archive_file" "function_source" {
   type        = "zip"
   source_dir  = "./src"
