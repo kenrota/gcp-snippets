@@ -1,0 +1,2 @@
+functions-framework==3.7.0
+ruff==0.4.5
