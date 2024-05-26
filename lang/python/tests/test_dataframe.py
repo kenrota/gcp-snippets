@@ -1,6 +1,7 @@
 import unittest
 import pandas as pd
 
+
 class DataframeTests(unittest.TestCase):
     DATA_1 = pd.DataFrame(
         {
@@ -31,6 +32,7 @@ class DataframeTests(unittest.TestCase):
         replaced = self.DATA_1.replace({"temperature": {10: 11, 30: 33}})
         self.assertEqual(list(self.DATA_1["temperature"]), [10, 20, 30])
         self.assertEqual(list(replaced["temperature"]), [11, 20, 33])
+
 
 if __name__ == "__main__":
     unittest.main()
