@@ -1,3 +1,7 @@
+# pytestのサンプル
+# https://github.com/pytest-dev/pytest/blob/main/README.rst
+
+
 def inc(x):
     return x + 1
 
