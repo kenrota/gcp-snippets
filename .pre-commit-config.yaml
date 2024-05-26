@@ -1,0 +1,35 @@
+repos:
+  - repo: https://github.com/pre-commit/pre-commit-hooks
+    rev: v4.6.0
+    hooks:
+      - id: end-of-file-fixer
+      - id: trailing-whitespace
+      - id: requirements-txt-fixer
+  - repo: local
+    hooks:
+      - id: ruff-format
+        name: ruff-format
+        entry: ruff format
+        language: system
+        types: [python]
+  - repo: local
+    hooks:
+      - id: ruff-check
+        name: ruff-check
+        entry: ruff check
+        language: system
+        types: [python]
+  - repo: local
+    hooks:
+      - id: unittest
+        name: unittest
+        entry: bash -c 'cd lang/python && python -m unittest'
+        language: system
+        types: [python]
+  - repo: local
+    hooks:
+      - id: pytest
+        name: pytest
+        entry: bash -c 'cd gcp/cloud-functions && pytest -v'
+        language: system
+        types: [python]

@@ -1,7 +1,7 @@
 import unittest
 
-class BuiltInFunctionTests(unittest.TestCase):
 
+class BuiltInFunctionTests(unittest.TestCase):
     def test_join(self):
         self.assertEqual(",".join(["a", "b", "c"]), "a,b,c")
 
@@ -13,6 +13,7 @@ class BuiltInFunctionTests(unittest.TestCase):
         # Ignore extra value
         extra = values_1 + ["d"]
         self.assertEqual(list(zip(extra, values_2)), [("a", 0), ("b", 1), ("c", 2)])
+
 
 if __name__ == "__main__":
     unittest.main()

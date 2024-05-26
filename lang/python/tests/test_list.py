@@ -2,11 +2,20 @@ import unittest
 import random
 import itertools
 
+
 class ListTests(unittest.TestCase):
     NUMS = list(range(1, 11))
     DAYS = [
-        "day1", "day2", "day3", "day4", "day5",
-        "day6", "day7", "day8", "day9", "day10"
+        "day1",
+        "day2",
+        "day3",
+        "day4",
+        "day5",
+        "day6",
+        "day7",
+        "day8",
+        "day9",
+        "day10",
     ]
 
     def test_append(self):
@@ -16,16 +25,10 @@ class ListTests(unittest.TestCase):
         self.assertEqual(days, self.DAYS)
 
     def test_map(self):
-        self.assertEqual(
-            list(map(lambda num: f"day{num}", self.NUMS)),
-            self.DAYS
-        )
+        self.assertEqual(list(map(lambda num: f"day{num}", self.NUMS)), self.DAYS)
 
     def test_list_comprehension(self):
-        self.assertEqual(
-            [f"day{num}" for num in self.NUMS],
-            self.DAYS
-        )
+        self.assertEqual([f"day{num}" for num in self.NUMS], self.DAYS)
 
     def test_shuffle_mutable(self):
         data = self.DAYS.copy()
@@ -45,9 +48,17 @@ class ListTests(unittest.TestCase):
         self.assertEqual(
             data,
             [
-                "day1", "day10", "day2", "day3", "day4",
-                "day5", "day6", "day7", "day8", "day9"
-            ]
+                "day1",
+                "day10",
+                "day2",
+                "day3",
+                "day4",
+                "day5",
+                "day6",
+                "day7",
+                "day8",
+                "day9",
+            ],
         )
 
     def test_sort_immutable(self):
@@ -57,9 +68,17 @@ class ListTests(unittest.TestCase):
         self.assertEqual(
             sorted_data,
             [
-                "day1", "day10", "day2", "day3", "day4",
-                "day5", "day6", "day7", "day8", "day9"
-            ]
+                "day1",
+                "day10",
+                "day2",
+                "day3",
+                "day4",
+                "day5",
+                "day6",
+                "day7",
+                "day8",
+                "day9",
+            ],
         )
 
     def extract_day_number(self, day_id):
@@ -79,11 +98,11 @@ class ListTests(unittest.TestCase):
 
         actual = list(
             map(
-                lambda t: t[1], # extract indexes
+                lambda t: t[1],  # extract indexes
                 sorted(
                     value_index_tuples,
-                    key=lambda t: t[0] # sort by value
-                )
+                    key=lambda t: t[0],  # sort by value
+                ),
             )
         )
         self.assertEqual(actual, expected)
@@ -92,28 +111,20 @@ class ListTests(unittest.TestCase):
         expected = ["day8", "day9", "day10"]
 
         # use list comprehension
-        actual = [
-            day_id for day_id in self.DAYS
-            if self.extract_day_number(day_id) > 7
-        ]
+        actual = [day_id for day_id in self.DAYS if self.extract_day_number(day_id) > 7]
         self.assertEqual(actual, expected)
 
         # use filter function
         actual = list(
-            filter(
-                lambda day_id: self.extract_day_number(day_id) > 7,
-                self.DAYS
-            )
+            filter(lambda day_id: self.extract_day_number(day_id) > 7, self.DAYS)
         )
         self.assertEqual(actual, expected)
 
     def test_flatten(self):
         data = [[1, 2], [3, 4, 5, 6], [7]]
         expected = [1, 2, 3, 4, 5, 6, 7]
-        self.assertEqual(
-            list(itertools.chain.from_iterable(data)),
-            expected
-        )
+        self.assertEqual(list(itertools.chain.from_iterable(data)), expected)
+
 
 if __name__ == "__main__":
     unittest.main()
