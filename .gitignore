@@ -41,3 +41,8 @@ terraform.rc
 
 # venv directory
 venv
+
+# Scala
+.bsp
+.scala-build
+out
