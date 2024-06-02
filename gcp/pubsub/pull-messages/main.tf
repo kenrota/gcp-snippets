@@ -88,7 +88,7 @@ resource "google_cloudfunctions2_function" "fetcher" {
     min_instance_count    = 0
     max_instance_count    = 1
     available_cpu         = "1"
-    available_memory      = "4Gi"
+    available_memory      = "1Gi"
     timeout_seconds       = 60
     service_account_email = var.functions_sa_email
     environment_variables = {
