@@ -4,12 +4,12 @@
 
 * `gcloud`
 
-```shell
+```bash
 gcloud functions call <関数名> --data '{"name":"foo"}'
 ```
 
 * `curl`
 
-```shell
+```bash
 curl -X POST -H "Content-Type: application/json" <URL> -d '{"name":"foo"}'
 ```
