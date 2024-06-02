@@ -7,7 +7,6 @@ from google.cloud import pubsub_v1
 
 def send_messages(project_id: str, topic_name: str, num_messages: int) -> None:
     topic_path = f"projects/{project_id}/topics/{topic_name}"
-
     batch_settings = pubsub_v1.types.BatchSettings()
     publisher = pubsub_v1.PublisherClient(batch_settings)
     publish_at = datetime.now().isoformat()
