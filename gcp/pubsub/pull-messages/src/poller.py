@@ -8,7 +8,7 @@ NUM_BATCHES = 15
 MAX_MESSAGES = 1000
 
 
-def pull_messages(project_id, subscription_name) -> None:
+def pull_messages(project_id: str, subscription_name: str) -> None:
     subscriber = pubsub_v1.SubscriberClient()
     subscription_path = subscriber.subscription_path(project_id, subscription_name)
 
