@@ -30,6 +30,6 @@ repos:
     hooks:
       - id: pytest
         name: pytest
-        entry: bash -c 'cd gcp/cloud-functions && pytest -v'
+        entry: bash -c 'cd gcp/cloudfunctions && pytest -v'
         language: system
         types: [python]
