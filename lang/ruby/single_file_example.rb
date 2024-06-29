@@ -54,7 +54,7 @@ class ExampleTest < Minitest::Test
   end
 
   def test_n_plus_one_problem
-    user_names = Report.all.map { |report| report.user.name }
+    user_names = Report.all.map { |r| r.user.name }
 
     assert_equal 6, user_names.size
     expected = [
@@ -71,7 +71,7 @@ class ExampleTest < Minitest::Test
   end
 
   def test_n_plus_one_solution
-    user_names = Report.preload(:user).map { |report| report.user.name }
+    user_names = Report.preload(:user).map { |r| r.user.name }
 
     assert_equal 6, user_names.size
     expected = [
