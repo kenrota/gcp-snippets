@@ -22,6 +22,10 @@ variable "db_username" {
   type = string
 }
 
+variable "db_database" {
+  type = string
+}
+
 variable "ssh_port" {
   type = number
 }

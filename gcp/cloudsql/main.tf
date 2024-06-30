@@ -105,6 +105,11 @@ resource "google_sql_database_instance" "default" {
   }
 }
 
+resource "google_sql_database" "database" {
+  name     = var.db_database
+  instance = google_sql_database_instance.default.name
+}
+
 data "google_secret_manager_secret_version" "db_password" {
   secret  = var.db_pw_secret_id
   version = "latest"
@@ -114,6 +119,7 @@ resource "google_sql_user" "default" {
   name     = var.db_username
   instance = google_sql_database_instance.default.name
   password = data.google_secret_manager_secret_version.db_password.secret_data
+  host     = "%"
 }
 
 resource "google_compute_instance" "cloud_sql_proxy" {
