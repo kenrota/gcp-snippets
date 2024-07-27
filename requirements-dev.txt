@@ -1,5 +1,5 @@
-functions-framework==3.7.0
-google-cloud-pubsub==2.21.2
+functions-framework==3.8.1
+google-cloud-pubsub==2.22.0
 pandas==2.2.2
-pytest==8.1.1
-ruff==0.4.5
+pytest==8.3.2
+ruff==0.5.5
