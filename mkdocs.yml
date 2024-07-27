@@ -1,0 +1,16 @@
+site_name: Example
+nav:
+  - Home: index.md
+  - Development: development.md
+  - Maintenance: maintenance.md
+theme:
+  name: material
+
+markdown_extensions:
+  - pymdownx.superfences:
+      custom_fences:
+        - name: mermaid
+          class: mermaid
+          format: !!python/name:pymdownx.superfences.fence_code_format
+  - mdx_truly_sane_lists:
+      nested_indent: 2
