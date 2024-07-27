@@ -46,3 +46,6 @@ venv
 .bsp
 .scala-build
 out
+
+# Ruby
+lang/ruby/vendor/

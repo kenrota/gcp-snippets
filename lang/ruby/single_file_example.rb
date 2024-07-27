@@ -1,18 +1,20 @@
-require "bundler/inline"
+# frozen_string_literal: true
+
+require 'bundler/inline'
 
 gemfile(true) do
-  source "https://rubygems.org"
+  source 'https://rubygems.org'
 
-  gem "activerecord", "7.1.3.4"
-  gem "sqlite3", "~> 1.7"
+  gem 'activerecord', '7.1.3.4'
+  gem 'sqlite3', '~> 1.7'
 end
 
-require "active_record"
-require "minitest/autorun"
-require "logger"
+require 'active_record'
+require 'minitest/autorun'
+require 'logger'
 
-ActiveRecord::Base.establish_connection(adapter: "sqlite3", database: ":memory:")
-ActiveRecord::Base.logger = Logger.new(STDOUT)
+ActiveRecord::Base.establish_connection(adapter: 'sqlite3', database: ':memory:')
+ActiveRecord::Base.logger = Logger.new($stdout)
 
 ActiveRecord::Schema.define do
   create_table :users, force: true do |t|
@@ -76,7 +78,7 @@ class ExampleTest < Minitest::Test
     assert_equal 6, user_names.size
     expected = [
       'SELECT "reports".* FROM "reports"',
-      'SELECT "users".* FROM "users" WHERE "users"."id" IN (?, ?, ?)'
+      'SELECT "users".* FROM "users" WHERE "users"."id" IN (?, ?, ?)',
     ]
     actual = @queries.map { |q| q.payload[:sql] }
     assert_equal expected, actual
