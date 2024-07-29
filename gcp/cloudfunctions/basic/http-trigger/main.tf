@@ -30,8 +30,8 @@ resource "google_storage_bucket_object" "function_archive" {
   source = data.archive_file.function_source.output_path
 }
 
-resource "google_cloudfunctions2_function" "http" {
-  name     = local.function_name
+resource "google_cloudfunctions2_function" "public" {
+  name     = "${local.function_name}-public"
   location = var.region
 
   build_config {
@@ -55,22 +55,68 @@ resource "google_cloudfunctions2_function" "http" {
     timeout_seconds       = 60
     service_account_email = var.service_account
     environment_variables = {
-      EXAMPLE_ENV = "1"
+      FUNCTION_NAME = "${local.function_name}-public"
     }
   }
 }
 
-resource "google_cloud_run_service_iam_member" "member" {
-  location = google_cloudfunctions2_function.http.location
-  service  = google_cloudfunctions2_function.http.name
+resource "google_cloudfunctions2_function" "private" {
+  name     = "${local.function_name}-private"
+  location = var.region
+
+  build_config {
+    runtime     = "python311"
+    entry_point = "main"
+    environment_variables = {
+      GOOGLE_FUNCTION_SOURCE = "main.py"
+    }
+    source {
+      storage_source {
+        bucket = google_storage_bucket.gcf_source.name
+        object = google_storage_bucket_object.function_archive.name
+      }
+    }
+  }
+
+  service_config {
+    min_instance_count    = 0
+    max_instance_count    = 1
+    available_memory      = "256M"
+    timeout_seconds       = 60
+    service_account_email = var.service_account
+    environment_variables = {
+      FUNCTION_NAME = "${local.function_name}-private"
+    }
+  }
+}
+
+resource "google_cloud_run_service_iam_member" "public_function_invoker" {
+  location = google_cloudfunctions2_function.public.location
+  service  = google_cloudfunctions2_function.public.name
   role     = "roles/run.invoker"
   member   = "allUsers"
 }
 
-output "function_name" {
-  value = google_cloudfunctions2_function.http.name
+resource "google_cloud_run_service_iam_member" "private_function_invoker" {
+  count    = length(var.allowed_invoker_emails)
+  location = google_cloudfunctions2_function.private.location
+  service  = google_cloudfunctions2_function.private.name
+  role     = "roles/run.invoker"
+  member   = "user:${var.allowed_invoker_emails[count.index]}"
 }
 
-output "http_public_endpoint_uri" {
-  value = google_cloudfunctions2_function.http.url
+output "function_name_public" {
+  value = google_cloudfunctions2_function.public.name
+}
+
+output "function_name_private" {
+  value = google_cloudfunctions2_function.private.name
+}
+
+output "function_url_public" {
+  value = google_cloudfunctions2_function.public.url
+}
+
+output "function_url_private" {
+  value = google_cloudfunctions2_function.private.url
 }
