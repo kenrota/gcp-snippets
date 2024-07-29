@@ -6,8 +6,7 @@ from flask import jsonify
 
 @functions_framework.http
 def main(request):
+    function_name = os.environ.get("FUNCTION_NAME")
     request_json = request.get_json(silent=True)
-    name = request_json["name"]
-    example_env = os.environ.get("EXAMPLE_ENV")
-    print(f"{example_env=}")
-    return jsonify({"message": f"hello {name}!"})
+    example_data = request_json["example_data"]
+    return jsonify({"function_name": function_name, "example_data": example_data})
