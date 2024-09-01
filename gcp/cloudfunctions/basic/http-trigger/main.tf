@@ -31,6 +31,7 @@ resource "google_storage_bucket_object" "function_archive" {
 }
 
 resource "google_cloudfunctions2_function" "public" {
+  count    = var.enable_public_function ? 1 : 0
   name     = "${local.function_name}-public"
   location = var.region
 
@@ -91,8 +92,9 @@ resource "google_cloudfunctions2_function" "private" {
 }
 
 resource "google_cloud_run_service_iam_member" "public_function_invoker" {
-  location = google_cloudfunctions2_function.public.location
-  service  = google_cloudfunctions2_function.public.name
+  count    = var.enable_public_function ? 1 : 0
+  location = google_cloudfunctions2_function.public[0].location
+  service  = google_cloudfunctions2_function.public[0].name
   role     = "roles/run.invoker"
   member   = "allUsers"
 }
@@ -106,7 +108,7 @@ resource "google_cloud_run_service_iam_member" "private_function_invoker" {
 }
 
 output "function_name_public" {
-  value = google_cloudfunctions2_function.public.name
+  value = var.enable_public_function ? google_cloudfunctions2_function.public[0].name : ""
 }
 
 output "function_name_private" {
@@ -114,7 +116,7 @@ output "function_name_private" {
 }
 
 output "function_url_public" {
-  value = google_cloudfunctions2_function.public.url
+  value = var.enable_public_function ? google_cloudfunctions2_function.public[0].url : ""
 }
 
 output "function_url_private" {

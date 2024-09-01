@@ -17,3 +17,8 @@ variable "service_account" {
 variable "allowed_invoker_emails" {
   type = list(string)
 }
+
+variable "enable_public_function" {
+  type    = bool
+  default = false
+}
