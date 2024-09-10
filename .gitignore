@@ -43,9 +43,10 @@ terraform.rc
 venv
 
 # Scala
-.bsp
-.scala-build
-out
+lang/scala/**/.bsp
+lang/scala/**/.scala-build
+lang/scala/**/in
+lang/scala/**/out
 
 # Ruby
 lang/ruby/vendor/
