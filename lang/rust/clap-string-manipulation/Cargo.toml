@@ -1,0 +1,16 @@
+[package]
+name = "string-manipulation"
+version = "0.1.0"
+edition = "2021"
+
+[dependencies]
+regex = "1.10.6"
+clap = "4.5.18"
+
+[dev-dependencies]
+assert_cmd = "2.0.16"
+predicates = "3.1.2"
+
+[[bin]]
+name = "strman"
+path = "src/main.rs"
