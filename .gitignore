@@ -50,3 +50,6 @@ lang/scala/**/out
 
 # Ruby
 lang/ruby/vendor/
+
+# Rust
+lang/rust/**/target/
