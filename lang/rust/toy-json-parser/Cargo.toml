@@ -1,0 +1,10 @@
+[package]
+name = "toy-json-parser"
+version = "0.1.0"
+edition = "2021"
+
+[dependencies]
+
+[[bin]]
+name = "toy-json-parser"
+path = "src/main.rs"
