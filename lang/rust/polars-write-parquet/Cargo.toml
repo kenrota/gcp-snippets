@@ -1,0 +1,12 @@
+[package]
+name = "polars-write-parquet"
+version = "0.1.0"
+edition = "2021"
+
+[dependencies]
+polars = { version = "0.43.1", features = ["parquet"] }
+rand = "0.9.0-alpha.2"
+
+[[bin]]
+name = "polars-write-parquet"
+path = "src/main.rs"
