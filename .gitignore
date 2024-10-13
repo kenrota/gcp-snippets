@@ -33,6 +33,9 @@ override.tf.json
 .terraformrc
 terraform.rc
 
+# functions zip
+src_zip/
+
 # Mac .DS_Store file
 .DS_Store
 
