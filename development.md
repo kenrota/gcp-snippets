@@ -1,16 +1,15 @@
 # Development
 
-## 仮想環境
-
-```bash
-python -m venv venv
-source ./venv/bin/activate
-```
-
 ## パッケージインストール
 
-```bash
-pip install -r requirements.txt
+```
+poetry install
+```
+
+## requirements.txt のエクスポート
+
+```
+poetry export -f requirements.txt -o requirements.txt --without-hashes
 ```
 
 ## gcloud の設定

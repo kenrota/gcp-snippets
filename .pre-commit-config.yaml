@@ -4,7 +4,6 @@ repos:
     hooks:
       - id: end-of-file-fixer
       - id: trailing-whitespace
-      - id: requirements-txt-fixer
   - repo: local
     hooks:
       - id: ruff-format
@@ -23,14 +22,14 @@ repos:
     hooks:
       - id: unittest
         name: unittest
-        entry: bash -c 'cd lang/python && python -m unittest'
+        entry: bash -c 'cd lang/python && poetry run python -m unittest'
         language: system
         types: [python]
   - repo: local
     hooks:
       - id: pytest
         name: pytest
-        entry: bash -c 'cd gcp/cloudfunctions && pytest -v'
+        entry: bash -c 'cd gcp/cloudfunctions && poetry run pytest -v'
         language: system
         types: [python]
   - repo: local
