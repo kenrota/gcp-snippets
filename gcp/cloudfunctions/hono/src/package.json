@@ -1,0 +1,7 @@
+{
+  "main": "index.js",
+  "type": "module",
+  "dependencies": {
+    "hono": "^4.7.2"
+  }
+}
