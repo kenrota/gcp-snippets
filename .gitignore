@@ -60,3 +60,6 @@ lang/rust/**/out/
 
 # AWS SAM
 .aws-sam/
+
+# Node.js
+node_modules/
