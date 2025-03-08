@@ -156,3 +156,9 @@ resource "google_compute_instance" "cloud_sql_proxy" {
 
   tags = [var.prefix]
 }
+
+resource "google_project_iam_member" "cloudsql_client" {
+  project = var.project_id
+  role    = "roles/cloudsql.client"
+  member  = "serviceAccount:${var.service_account}"
+}

@@ -80,3 +80,9 @@ resource "google_compute_instance" "default" {
 
   tags = [var.prefix]
 }
+
+resource "google_project_iam_member" "log_writer" {
+  project = var.project_id
+  role    = "roles/logging.logWriter"
+  member  = "serviceAccount:${var.service_account}"
+}
