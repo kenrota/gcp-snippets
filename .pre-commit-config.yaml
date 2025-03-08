@@ -18,24 +18,3 @@ repos:
         entry: ruff check
         language: system
         types: [python]
-  - repo: local
-    hooks:
-      - id: unittest
-        name: unittest
-        entry: bash -c 'cd lang/python && poetry run python -m unittest'
-        language: system
-        types: [python]
-  - repo: local
-    hooks:
-      - id: pytest
-        name: pytest
-        entry: bash -c 'cd gcp/cloudfunctions && poetry run pytest -v'
-        language: system
-        types: [python]
-  - repo: local
-    hooks:
-      - id: rubocop
-        name: rubocop
-        entry: bash -c 'cd lang/ruby && bundle exec rubocop -a'
-        language: system
-        types: [ruby]
