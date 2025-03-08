@@ -1,4 +1,4 @@
-site_name: Lab
+site_name: GCP Labs
 nav:
   - Home: index.md
   - Development: development.md
