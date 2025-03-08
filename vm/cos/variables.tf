@@ -12,9 +12,10 @@ variable "region" {
 
 variable "service_account" {
   type = string
-  # 必須ロール
-  # - Artifact Registry 読み取り (VMがコンテナイメージをダウンロードするために必要)
-  # - ログ書き込み (VMがCloud Logging にログを書き込むために必要)
+}
+
+variable "repository_name" {
+  type = string
 }
 
 variable "container_image" {

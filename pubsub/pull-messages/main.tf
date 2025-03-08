@@ -111,3 +111,18 @@ resource "google_cloudfunctions2_function" "fetcher" {
     google_storage_bucket.gcf_source
   ]
 }
+
+resource "google_pubsub_subscription_iam_member" "subscriber" {
+  project      = var.project_id
+  subscription = google_pubsub_subscription.buffer.name
+  role         = "roles/pubsub.subscriber"
+  member       = "serviceAccount:${var.functions_sa_email}"
+}
+
+resource "google_cloud_run_service_iam_member" "function_invoker" {
+  project  = var.project_id
+  location = var.region
+  service  = google_cloudfunctions2_function.fetcher.name
+  role     = "roles/run.invoker"
+  member   = "serviceAccount:${var.trigger_sa_email}"
+}

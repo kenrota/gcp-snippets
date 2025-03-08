@@ -50,3 +50,17 @@ EOT
     scopes = ["cloud-platform"]
   }
 }
+
+resource "google_artifact_registry_repository_iam_member" "artifact_reader" {
+  project    = var.project_id
+  location   = var.region
+  repository = var.repository_name
+  role       = "roles/artifactregistry.reader"
+  member     = "serviceAccount:${var.service_account}"
+}
+
+resource "google_project_iam_member" "log_writer" {
+  project = var.project_id
+  role    = "roles/logging.logWriter"
+  member  = "serviceAccount:${var.service_account}"
+}

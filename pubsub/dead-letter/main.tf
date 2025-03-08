@@ -168,3 +168,11 @@ resource "google_cloudfunctions2_function" "dl_receiver" {
     google_storage_bucket.gcf_source
   ]
 }
+
+resource "google_cloud_run_service_iam_member" "function_invoker" {
+  project  = var.project_id
+  location = var.region
+  service  = google_cloudfunctions2_function.main.name
+  role     = "roles/run.invoker"
+  member   = "serviceAccount:${var.trigger_sa_email}"
+}
