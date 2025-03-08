@@ -45,21 +45,5 @@ src_zip/
 # venv directory
 venv
 
-# Scala
-lang/scala/**/.bsp
-lang/scala/**/.scala-build
-lang/scala/**/in
-lang/scala/**/out
-
-# Ruby
-lang/ruby/vendor/
-
-# Rust
-lang/rust/**/target/
-lang/rust/**/out/
-
-# AWS SAM
-.aws-sam/
-
 # Node.js
 node_modules/
