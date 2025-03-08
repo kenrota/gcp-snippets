@@ -1,5 +1,5 @@
 [tool.poetry]
-name = "lab"
+name = "GCP Labs"
 package-mode = false
 
 [tool.poetry.dependencies]
