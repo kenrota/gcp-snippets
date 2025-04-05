@@ -37,35 +37,17 @@ def list_cloud_run_services(project_id: str) -> list[dict]:
 
     resources = []
     for service in services:
-        if (
-            service["metadata"]["annotations"].get("run.googleapis.com/client-name")
-            == "cloudfunctions"
-        ):
-            continue
-
-        resources.append(
-            {
-                "Type": "Cloud Run Services",
-                "Name": service["metadata"]["name"],
-                "Endpoint": service["status"]["url"],
-            }
+        resource_type = (
+            "Cloud Run Functions"
+            if service["metadata"]["labels"].get("goog-managed-by") == "cloudfunctions"
+            else "Cloud Run Services"
         )
 
-    return resources
-
-
-def list_cloud_run_functions(project_id: str) -> list[dict]:
-    cmd = f"gcloud functions list --project={project_id} --format=json"
-    result = subprocess.run(cmd, shell=True, capture_output=True, text=True)
-    functions = json.loads(result.stdout)
-
-    resources = []
-    for function in functions:
         resources.append(
             {
-                "Type": "Cloud Run Functions",
-                "Name": function["name"].split("/")[-1],
-                "Endpoint": function["url"],
+                "Type": resource_type,
+                "Name": service["metadata"]["name"],
+                "Endpoint": service["status"]["url"],
             }
         )
 
@@ -80,8 +62,7 @@ def main():
 
     vms = list_vm_instances(project_id)
     cloud_run_services = list_cloud_run_services(project_id)
-    cloud_run_functions = list_cloud_run_functions(project_id)
-    resources = vms + cloud_run_services + cloud_run_functions
+    resources = vms + cloud_run_services
 
     if len(resources) > 0:
         df = pd.DataFrame(resources)
