@@ -72,11 +72,30 @@ def list_bigtable_instances(project_id: str) -> list[dict]:
     return resources
 
 
+def list_storage_buckets(project_id: str) -> list[dict]:
+    cmd = f"gcloud storage buckets list --project={project_id} --format=json"
+    result = subprocess.run(cmd, shell=True, capture_output=True, text=True)
+    buckets = json.loads(result.stdout)
+
+    resources = []
+    for bucket in buckets:
+        resources.append(
+            {
+                "Type": "Storage",
+                "Name": bucket["name"],
+                "Endpoint": bucket["storage_url"],
+            }
+        )
+
+    return resources
+
+
 def list_resources(project_id: str) -> list[dict]:
     resources = []
     resources += list_vm_instances(project_id)
     resources += list_cloud_run_services(project_id)
     resources += list_bigtable_instances(project_id)
+    resources += list_storage_buckets(project_id)
     return resources
 
 
