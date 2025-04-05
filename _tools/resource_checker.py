@@ -54,15 +54,39 @@ def list_cloud_run_services(project_id: str) -> list[dict]:
     return resources
 
 
+def list_bigtable_instances(project_id: str) -> list[dict]:
+    cmd = f"gcloud bigtable instances list --project={project_id} --format=json"
+    result = subprocess.run(cmd, shell=True, capture_output=True, text=True)
+    instances = json.loads(result.stdout)
+
+    resources = []
+    for instance in instances:
+        resources.append(
+            {
+                "Type": "Bigtable",
+                "Name": instance["displayName"],
+                "Endpoint": "",
+            }
+        )
+
+    return resources
+
+
+def list_resources(project_id: str) -> list[dict]:
+    resources = []
+    resources += list_vm_instances(project_id)
+    resources += list_cloud_run_services(project_id)
+    resources += list_bigtable_instances(project_id)
+    return resources
+
+
 def main():
     parser = argparse.ArgumentParser()
     parser.add_argument("--project-id")
     args = parser.parse_args()
     project_id = args.project_id
 
-    vms = list_vm_instances(project_id)
-    cloud_run_services = list_cloud_run_services(project_id)
-    resources = vms + cloud_run_services
+    resources = list_resources(project_id)
 
     if len(resources) > 0:
         df = pd.DataFrame(resources)
