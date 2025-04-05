@@ -12,15 +12,20 @@ def list_vm_instances(project_id: str) -> list[dict]:
 
     resources = []
     for instance in instances:
+        internal_ips = []
+        external_ips = []
         for interface in instance.get("networkInterfaces", []):
-            vm = {
+            internal_ips.append(interface["networkIP"])
+            access_configs = interface.get("accessConfigs", [])
+            external_ips += list(map(lambda x: x["natIP"], access_configs))
+
+        resources.append(
+            {
                 "Type": "VM",
                 "Name": instance["name"],
+                "Endpoint": ", ".join(internal_ips + external_ips),
             }
-            access_configs = interface.get("accessConfigs", [])
-            external_ips = map(lambda x: x["natIP"], access_configs)
-            vm["Endpoint"] = ", ".join(external_ips) if external_ips else ""
-            resources.append(vm)
+        )
 
     return resources
 
