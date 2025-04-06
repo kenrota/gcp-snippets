@@ -5,13 +5,17 @@ import argparse
 from tabulate import tabulate
 
 
+def run_command(cmd: str) -> list[dict]:
+    result = subprocess.run(cmd, shell=True, capture_output=True, text=True)
+    if result.returncode != 0:
+        raise RuntimeError(f"Command failed: {result.stderr}")
+    return json.loads(result.stdout)
+
+
 def list_vm_instances(project_id: str) -> list[dict]:
     cmd = f"gcloud compute instances list --project={project_id} --format=json"
-    result = subprocess.run(cmd, shell=True, capture_output=True, text=True)
-    instances = json.loads(result.stdout)
 
-    resources = []
-    for instance in instances:
+    def _to_resource(instance: dict):
         internal_ips = []
         external_ips = []
         for interface in instance.get("networkInterfaces", []):
@@ -19,75 +23,59 @@ def list_vm_instances(project_id: str) -> list[dict]:
             access_configs = interface.get("accessConfigs", [])
             external_ips += list(map(lambda x: x["natIP"], access_configs))
 
-        resources.append(
-            {
-                "Type": "VM",
-                "Name": instance["name"],
-                "Endpoint": ", ".join(internal_ips + external_ips),
-            }
-        )
+        return {
+            "Type": "VM",
+            "Name": instance["name"],
+            "Endpoint": ", ".join(internal_ips + external_ips),
+        }
 
-    return resources
+    return list(map(_to_resource, run_command(cmd)))
 
 
 def list_cloud_run_services(project_id: str) -> list[dict]:
     cmd = f"gcloud run services list --project={project_id} --format=json"
-    result = subprocess.run(cmd, shell=True, capture_output=True, text=True)
-    services = json.loads(result.stdout)
 
-    resources = []
-    for service in services:
-        resource_type = (
-            "Cloud Run Functions"
+    def _get_resource_type(service: dict):
+        return (
+            "Run Functions"
             if service["metadata"]["labels"].get("goog-managed-by") == "cloudfunctions"
-            else "Cloud Run Services"
+            else "Run Services"
         )
 
-        resources.append(
-            {
-                "Type": resource_type,
-                "Name": service["metadata"]["name"],
-                "Endpoint": service["status"]["url"],
-            }
-        )
+    def _to_resource(service: dict):
+        return {
+            "Type": _get_resource_type(service),
+            "Name": service["metadata"]["name"],
+            "Endpoint": service["status"]["url"],
+        }
 
-    return resources
+    return list(map(_to_resource, run_command(cmd)))
 
 
 def list_bigtable_instances(project_id: str) -> list[dict]:
     cmd = f"gcloud bigtable instances list --project={project_id} --format=json"
-    result = subprocess.run(cmd, shell=True, capture_output=True, text=True)
-    instances = json.loads(result.stdout)
 
-    resources = []
-    for instance in instances:
-        resources.append(
-            {
-                "Type": "Bigtable",
-                "Name": instance["displayName"],
-                "Endpoint": "",
-            }
-        )
+    def _to_resource(instance: dict):
+        return {
+            "Type": "Bigtable",
+            "Name": instance["displayName"],
+            "Endpoint": "",
+        }
 
-    return resources
+    return list(map(_to_resource, run_command(cmd)))
 
 
 def list_storage_buckets(project_id: str) -> list[dict]:
     cmd = f"gcloud storage buckets list --project={project_id} --format=json"
-    result = subprocess.run(cmd, shell=True, capture_output=True, text=True)
-    buckets = json.loads(result.stdout)
 
-    resources = []
-    for bucket in buckets:
-        resources.append(
-            {
-                "Type": "Storage",
-                "Name": bucket["name"],
-                "Endpoint": bucket["storage_url"],
-            }
-        )
+    def _to_resource(bucket: dict):
+        return {
+            "Type": "Storage",
+            "Name": bucket["name"],
+            "Endpoint": bucket["storage_url"],
+        }
 
-    return resources
+    return list(map(_to_resource, run_command(cmd)))
 
 
 def list_resources(project_id: str) -> list[dict]:
@@ -101,7 +89,7 @@ def list_resources(project_id: str) -> list[dict]:
 
 def main():
     parser = argparse.ArgumentParser()
-    parser.add_argument("--project-id")
+    parser.add_argument("--project-id", required=True)
     args = parser.parse_args()
     project_id = args.project_id
 
