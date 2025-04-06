@@ -90,6 +90,7 @@ def list_resources(project_id: str) -> list[dict]:
 def main():
     parser = argparse.ArgumentParser()
     parser.add_argument("--project-id", required=True)
+    parser.add_argument("--csv", help="Output CSV file path")
     args = parser.parse_args()
     project_id = args.project_id
 
@@ -97,7 +98,12 @@ def main():
 
     if len(resources) > 0:
         df = pd.DataFrame(resources)
-        print(tabulate(df, headers="keys", showindex=False))
+
+        if args.csv:
+            df.to_csv(args.csv, index=False)
+            print(f"CSV written to: {args.csv}")
+        else:
+            print(tabulate(df, headers="keys", showindex=False))
     else:
         print("Resource not found.")
 
