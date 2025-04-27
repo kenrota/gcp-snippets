@@ -8,9 +8,10 @@ resource "google_service_account" "run" {
 }
 
 resource "google_cloud_run_v2_service" "default" {
-  name     = "${var.prefix}-hello-app"
-  location = var.region
-  project  = var.project_id
+  name                = "${var.prefix}-hello-app"
+  location            = var.region
+  project             = var.project_id
+  deletion_protection = false
 
   template {
     containers {
