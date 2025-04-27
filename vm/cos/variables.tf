@@ -10,10 +10,6 @@ variable "region" {
   type = string
 }
 
-variable "service_account" {
-  type = string
-}
-
 variable "repository_name" {
   type = string
 }

@@ -28,6 +28,10 @@ locals {
   enable_deletion_protection = true
 }
 
+resource "google_service_account" "vm" {
+  account_id = "${var.prefix}-vm"
+}
+
 resource "google_compute_network" "default" {
   name                    = var.prefix
   auto_create_subnetworks = false
@@ -141,7 +145,7 @@ resource "google_compute_instance" "cloud_sql_proxy" {
   }
 
   service_account {
-    email  = var.service_account
+    email  = google_service_account.vm.email
     scopes = ["cloud-platform"]
   }
 
@@ -160,5 +164,5 @@ resource "google_compute_instance" "cloud_sql_proxy" {
 resource "google_project_iam_member" "cloudsql_client" {
   project = var.project_id
   role    = "roles/cloudsql.client"
-  member  = "serviceAccount:${var.service_account}"
+  member  = "serviceAccount:${google_service_account.vm.email}"
 }

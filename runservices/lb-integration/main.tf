@@ -3,6 +3,10 @@ provider "google" {
   region  = var.region
 }
 
+resource "google_service_account" "run" {
+  account_id = "${var.prefix}-run"
+}
+
 resource "google_cloud_run_v2_service" "default" {
   name     = "${var.prefix}-hello-app"
   location = var.region
@@ -16,7 +20,7 @@ resource "google_cloud_run_v2_service" "default" {
         container_port = 8080
       }
     }
-    service_account = var.service_account
+    service_account = google_service_account.run.email
   }
 }
 
