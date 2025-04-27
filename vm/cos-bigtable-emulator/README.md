@@ -16,5 +16,6 @@
 
 * テーブルを作成
   ```
+  export BIGTABLE_EMULATOR_HOST=localhost:8086
   cbt createtable my-table
   ```
