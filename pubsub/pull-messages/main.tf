@@ -3,6 +3,14 @@ provider "google" {
   region  = var.region
 }
 
+resource "google_service_account" "function" {
+  account_id = "${var.prefix}-function"
+}
+
+resource "google_service_account" "pubsub" {
+  account_id = "${var.prefix}-pubsub"
+}
+
 # Pub/Sub
 
 resource "google_pubsub_topic" "req_fetcher" {
@@ -90,7 +98,7 @@ resource "google_cloudfunctions2_function" "fetcher" {
     available_cpu         = "1"
     available_memory      = "1Gi"
     timeout_seconds       = 60
-    service_account_email = var.functions_sa_email
+    service_account_email = google_service_account.function.email
     environment_variables = {
       PROJECT_ID               = var.project_id
       BUFFER_SUBSCRIPTION_NAME = google_pubsub_subscription.buffer.name
@@ -102,7 +110,7 @@ resource "google_cloudfunctions2_function" "fetcher" {
     trigger_region        = var.region
     event_type            = "google.cloud.pubsub.topic.v1.messagePublished"
     pubsub_topic          = google_pubsub_topic.req_fetcher.id
-    service_account_email = var.trigger_sa_email
+    service_account_email = google_service_account.pubsub.email
     retry_policy          = "RETRY_POLICY_DO_NOT_RETRY"
   }
 
@@ -116,7 +124,7 @@ resource "google_pubsub_subscription_iam_member" "subscriber" {
   project      = var.project_id
   subscription = google_pubsub_subscription.buffer.name
   role         = "roles/pubsub.subscriber"
-  member       = "serviceAccount:${var.functions_sa_email}"
+  member       = "serviceAccount:${google_service_account.function.email}"
 }
 
 resource "google_cloud_run_service_iam_member" "function_invoker" {
@@ -124,5 +132,5 @@ resource "google_cloud_run_service_iam_member" "function_invoker" {
   location = var.region
   service  = google_cloudfunctions2_function.fetcher.name
   role     = "roles/run.invoker"
-  member   = "serviceAccount:${var.trigger_sa_email}"
+  member   = "serviceAccount:${google_service_account.pubsub.email}"
 }

@@ -12,6 +12,10 @@ provider "google" {
   region  = var.region
 }
 
+resource "google_service_account" "function" {
+  account_id = "${var.prefix}-function"
+}
+
 resource "random_id" "bucket_suffix" {
   byte_length = 8
 }
@@ -62,7 +66,7 @@ resource "google_cloudfunctions2_function" "default" {
     max_instance_count    = 1
     available_memory      = "256M"
     timeout_seconds       = 60
-    service_account_email = var.service_account
+    service_account_email = google_service_account.function.email
   }
 }
 

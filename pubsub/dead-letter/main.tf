@@ -3,6 +3,14 @@ provider "google" {
   region  = var.region
 }
 
+resource "google_service_account" "function" {
+  account_id = "${var.prefix}-function"
+}
+
+resource "google_service_account" "pubsub" {
+  account_id = "${var.prefix}-pubsub"
+}
+
 # Pub/Sub
 
 resource "google_pubsub_topic" "main" {
@@ -21,7 +29,7 @@ resource "google_pubsub_subscription" "main" {
     push_endpoint = google_cloudfunctions2_function.main.service_config[0].uri
 
     oidc_token {
-      service_account_email = var.trigger_sa_email
+      service_account_email = google_service_account.pubsub.email
     }
   }
 
@@ -100,7 +108,7 @@ resource "google_cloudfunctions2_function" "main" {
     max_instance_count    = 1
     available_memory      = "256M"
     timeout_seconds       = 60
-    service_account_email = var.functions_sa_email
+    service_account_email = google_service_account.function.email
   }
 
   depends_on = [
@@ -151,7 +159,7 @@ resource "google_cloudfunctions2_function" "dl_receiver" {
     max_instance_count    = 1
     available_memory      = "256M"
     timeout_seconds       = 60
-    service_account_email = var.functions_sa_email
+    service_account_email = google_service_account.function.email
   }
 
   # event_trigger で指定したトピックのサブスクリプションは自動で作成される。
@@ -159,7 +167,7 @@ resource "google_cloudfunctions2_function" "dl_receiver" {
     trigger_region        = var.region
     event_type            = "google.cloud.pubsub.topic.v1.messagePublished"
     pubsub_topic          = google_pubsub_topic.dead_letter.id
-    service_account_email = var.trigger_sa_email
+    service_account_email = google_service_account.pubsub.email
     retry_policy          = "RETRY_POLICY_DO_NOT_RETRY"
   }
 
@@ -174,5 +182,5 @@ resource "google_cloud_run_service_iam_member" "function_invoker" {
   location = var.region
   service  = google_cloudfunctions2_function.main.name
   role     = "roles/run.invoker"
-  member   = "serviceAccount:${var.trigger_sa_email}"
+  member   = "serviceAccount:${google_service_account.pubsub.email}"
 }

@@ -3,6 +3,14 @@ provider "google" {
   region  = var.region
 }
 
+resource "google_service_account" "function" {
+  account_id = "${var.prefix}-function"
+}
+
+resource "google_service_account" "pubsub" {
+  account_id = "${var.prefix}-pubsub"
+}
+
 resource "google_compute_network" "default" {
   name                    = "${var.prefix}-vpc"
   auto_create_subnetworks = false
@@ -151,7 +159,7 @@ resource "google_cloudfunctions2_function" "monitor" {
   service_config {
     min_instance_count    = 0
     max_instance_count    = 1
-    service_account_email = var.functions_sa_email
+    service_account_email = google_service_account.function.email
     environment_variables = {
       LOG_EXECUTION_ID = "true"
       VM_DNS_NAME      = "vm.internal.demo"
@@ -165,7 +173,7 @@ resource "google_cloudfunctions2_function" "monitor" {
     trigger_region        = var.region
     event_type            = "google.cloud.pubsub.topic.v1.messagePublished"
     pubsub_topic          = google_pubsub_topic.trigger.id
-    service_account_email = var.trigger_sa_email
+    service_account_email = google_service_account.pubsub.email
     retry_policy          = "RETRY_POLICY_DO_NOT_RETRY"
   }
 }
@@ -175,5 +183,5 @@ resource "google_cloud_run_service_iam_member" "function_invoker" {
   location = var.region
   service  = google_cloudfunctions2_function.monitor.name
   role     = "roles/run.invoker"
-  member   = "serviceAccount:${var.trigger_sa_email}"
+  member   = "serviceAccount:${google_service_account.pubsub.email}"
 }

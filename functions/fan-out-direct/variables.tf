@@ -10,16 +10,6 @@ variable "region" {
   type = string
 }
 
-variable "functions_sa_email" {
-  type        = string
-  description = "Service Account for Cloud Functions"
-}
-
-variable "trigger_sa_email" {
-  type        = string
-  description = "Service Account for Pub/Sub trigger"
-}
-
 variable "num_workers" {
   type        = number
   description = "Number of workers"
