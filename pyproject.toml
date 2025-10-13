@@ -1,5 +1,5 @@
 [tool.poetry]
-name = "GCP Labs"
+name = "GCP Snippets"
 package-mode = false
 
 [tool.poetry.dependencies]
