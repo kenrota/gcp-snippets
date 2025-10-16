@@ -31,6 +31,13 @@ resource "google_storage_bucket" "gcf_source" {
   force_destroy               = true
 }
 
+resource "google_storage_bucket" "idempotency_markers" {
+  name                        = "${var.prefix}-idempotency-markers-${random_id.bucket_suffix.hex}"
+  location                    = var.region
+  uniform_bucket_level_access = true
+  force_destroy               = true
+}
+
 resource "google_pubsub_topic" "req_to_func" {
   name = "${var.prefix}-req-to-func"
 }
@@ -94,7 +101,7 @@ resource "google_cloudfunctions2_function" "cloud_event" {
     timeout_seconds       = 60
     service_account_email = google_service_account.function.email
     environment_variables = {
-      EXAMPLE_ENV = "1"
+      IDEMPOTENCY_BUCKET = google_storage_bucket.idempotency_markers.name
     }
   }
 
@@ -113,4 +120,10 @@ resource "google_cloud_run_service_iam_member" "function_invoker" {
   service  = google_cloudfunctions2_function.cloud_event.name
   role     = "roles/run.invoker"
   member   = "serviceAccount:${google_service_account.pubsub.email}"
+}
+
+resource "google_storage_bucket_iam_member" "writer" {
+  bucket = google_storage_bucket.idempotency_markers.name
+  role   = "roles/storage.objectCreator"
+  member = "serviceAccount:${google_service_account.function.email}"
 }
